@@ -89,3 +89,37 @@ body {
         transform: translateX(0px);
     }
 }
+
+.container button:hover {
+    box-shadow: 0 10px 25px rgba(73, 78, 234, .10);
+}
+
+.container .hidden {
+    display: none;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.container .secondary-btn {
+    width: 48%;
+    padding: 10px;
+    margin-top: 10px;
+    border: 1px solid #494eea;
+    background: #fff;
+    cursor: pointer;
+    border-radius: 5px;
+    color: #494eea;
+    font-weight: 500;
+    display: inline-block;
+    text-align: center;
+}
+
+.container .secondary-btn.download {
+    float: left;
+}
+
+.container .secondary-btn.clear {
+    float: right;
+}
