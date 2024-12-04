@@ -34,11 +34,22 @@ function generateQRCode() {
             let logoSize = size * 0.2;
             let x = (size - logoSize) / 2;
             let y = (size - logoSize) / 2;
+            
+            // Add border radius
+            ctx.save();
+            ctx.beginPath();
+            ctx.arc(x + logoSize / 2, y + logoSize / 2, logoSize / 2, 0, Math.PI * 2);
+            ctx.clip();
+            
             ctx.drawImage(logo, x, y, logoSize, logoSize);
+            ctx.restore();
             qrImg.src = canvas.toDataURL('image/png');
         };
 
-        if (logoInput.files && logoInput.files[0]) {
+        if (logoInput.files && logoInput.files[0] && emojiInput.value) {
+            alert('Please choose only one option: Image or Emoji');
+        }
+        else if (logoInput.files && logoInput.files[0]) {
             logo.src = URL.createObjectURL(logoInput.files[0]);
         } else if (emojiInput.value) {
             // Create emoji image
