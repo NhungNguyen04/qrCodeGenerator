@@ -9,6 +9,7 @@ body {
     background: #262a2f;
 }
 
+
 .container {
     width: 400px;
     padding: 25px 35px;
@@ -24,6 +25,16 @@ body {
     font-weight: 600;
     font-size: 15px;
     margin-bottom: 8px;
+}
+
+.container h5 {
+    font-weight: 300;
+}
+
+#qrColor {
+    width: 20%;
+    height: 20px;
+    padding: 4px
 }
 
 .container input {
