@@ -3,6 +3,7 @@ let qrImg = document.getElementById('qrImg');
 let qrText = document.getElementById('qrText');
 let clearBtn = document.querySelector('.secondary-btn.clear');
 let downloadBtn = document.querySelector('.secondary-btn.download');
+let shareBtn = document.querySelector('.secondary-btn.share');
 let qrColor = document.getElementById('qrColor');
 let logoInput = document.getElementById('logoInput');
 let emojiInput = document.getElementById('emojiInput');
@@ -67,6 +68,7 @@ function generateQRCode() {
         imgBox.classList.add('show-img');
         clearBtn.classList.remove('hidden');
         downloadBtn.classList.remove('hidden');
+        document.getElementById('shareOptions').classList.remove('hidden');
     } else {
         qrText.classList.add('error');
         setTimeout(() => {
@@ -82,6 +84,8 @@ function clearValues() {
     imgBox.classList.remove('show-img');
     clearBtn.classList.add('hidden');
     downloadBtn.classList.add('hidden');
+    document.querySelector('.secondary-btn.share').classList.add('hidden');
+    document.getElementById('shareOptions').classList.add('hidden');
 }
 
 function downloadImg() {
@@ -100,5 +104,76 @@ function downloadImg() {
     document.body.removeChild(link);
 }
 
+function showShareOptions() {
+    const shareOptions = document.getElementById('shareOptions');
+    if (shareOptions.classList.contains('hidden')) {
+        shareOptions.classList.remove('hidden');
+    } else {
+        shareOptions.classList.add('hidden');
+    }
+}
+
+function shareToSocialMedia(platform) {
+    if (qrImg.src.length === 0) {
+        qrText.classList.add('error');
+        setTimeout(() => {
+            qrText.classList.remove('error');
+        }, 1000);
+        return;
+    }
+
+    let shareUrl = '';
+    const imageUrl = qrImg.src;
+    const text = 'Check out this QR code!';
+
+    switch (platform) {
+        case 'facebook':
+            shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(imageUrl)}`;
+            break;
+        case 'twitter':
+            shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(imageUrl)}`;
+            break;
+        case 'instagram':
+            alert('To share on Instagram, please download the image and upload it manually to the Instagram app.');
+            return;
+    }
+
+    if (shareUrl) {
+        window.open(shareUrl, '_blank', 'width=600,height=400');
+    }
+}
+
+function shareToFacebook() {
+    shareToSocialMedia('facebook');
+}
+
+function shareToTwitter() {
+    shareToSocialMedia('twitter');
+}
+
+function shareToInstagram() {
+    shareToSocialMedia('instagram');
+}
+
+async function copyToClipboard() {
+    try {
+        const blob = await fetch(qrImg.src).then(r => r.blob());
+        await navigator.clipboard.write([
+            new ClipboardItem({
+                'image/png': blob
+            })
+        ]);
+        alert('QR code image copied to clipboard!');
+    } catch (error) {
+        console.error('Error copying to clipboard:', error);
+        alert('Unable to copy to clipboard. Please try downloading instead.');
+    }
+}
+
 downloadBtn.addEventListener('click', downloadImg);
+if (shareBtn) {
+    shareBtn.addEventListener('click', showShareOptions);
+} else {
+    console.error('Share button not found');
+}
 

@@ -19,6 +19,17 @@
         <button onClick="generateQRCode()">Generate QR Code</button>
         <button class="secondary-btn clear hidden" onClick="clearValues()">Clear</button>
         <button class="secondary-btn download hidden">Download</button>
+        <div id="shareOptions" class="hidden">
+            <button onclick="shareToFacebook()">
+                <img src="facebook-icon.png" alt="Facebook"> Facebook
+            </button>
+            <button onclick="shareToTwitter()">
+                <img src="twitter-icon.png" alt="Twitter"> Twitter
+            </button>
+            <button onclick="copyToClipboard()">
+                <img src="copy-icon.png" alt="Clipboard"> Copy
+            </button>
+        </div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
     <script src="script.js"></script>

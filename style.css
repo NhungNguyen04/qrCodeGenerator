@@ -9,7 +9,6 @@ body {
     background: #262a2f;
 }
 
-
 .container {
     width: 400px;
     padding: 25px 35px;
@@ -162,4 +161,32 @@ body {
     font-weight: 500;
     display: inline-block;
     text-align: center;
+}
+
+#shareOptions {
+    margin-top: 60px;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+#shareOptions button {
+    width: 30%;
+    padding: 10px;
+    margin-top: 0;
+    border: 1px solid #494eea;
+    background: #fff;
+    cursor: pointer;
+    border-radius: 5px;
+    color: #494eea;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#shareOptions button img {
+    width: 20px;
+    height: 20px;
+    margin-right: 5px;
 }
