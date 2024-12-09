@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Generator</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="auth-buttons">
+            <button id="authButton1" onclick="handleAuthButton1()"></button>
+            <button id="authButton2" onclick="handleAuthButton2()"></button>
+        </div>
+        <p>QrCode image generator</p>
+        <span><h5>Choose a color <input type="color" id="qrColor" value="#000000" style="margin-left: 10px;"></h5></span>
+        <input type="text" placeholder="Text or URL" id="qrText">
+        <input type="file" id="logoInput" accept="image/*">
+        <input type="text" id="emojiInput" placeholder="Enter an emoji">
+        <div id="imgBox">
+            <img id="qrImg" src="" alt="">
+        </div>
+        <button class="primary-btn generate" onClick="generateQRCode()">Generate QR Code</button>
+        <button id="viewRecentQRCodesBtn" class="primary-btn view-recent hidden" onclick="window.location.href='/recent-qr'">View Recent</button>
+        <button class="secondary-btn clear hidden" onClick="clearValues()">Clear</button>
+        <button class="secondary-btn download hidden">Download</button>
+        <div id="shareOptions" class="hidden">
+            <button onclick="shareToFacebook()">
+                <img src="facebook-icon.png" alt="Facebook"> Facebook
+            </button>
+            <button onclick="shareToTwitter()">
+                <img src="twitter-icon.png" alt="Twitter"> Twitter
+            </button>
+            <button onclick="copyToClipboard()">
+                <img src="copy-icon.png" alt="Clipboard"> Copy
+            </button>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+    <script src="script.js"></script>
+    <script>
+        function handleAuthButton1() {
+            if (localStorage.getItem('token')) {
+                localStorage.removeItem('token');
+                window.location.reload();
+            } else {
+                window.location.href = '/register';
+            }
+        }
+
+        function handleAuthButton2() {
+            if (localStorage.getItem('token')) {
+                localStorage.removeItem('token');
+                window.location.reload();
+            } else {
+                window.location.href = '/login';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const token = localStorage.getItem('token');
+            const authButton1 = document.getElementById('authButton1');
+            const authButton2 = document.getElementById('authButton2');
+
+            if (token) {
+                authButton1.textContent = 'Logout';
+                authButton2.style.display = 'none';
+            } else {
+                authButton1.textContent = 'Register';
+                authButton2.textContent = 'Login';
+            }
+
+            const viewRecentQRCodesBtn = document.getElementById('viewRecentQRCodesBtn');
+            if (localStorage.getItem('token')) {
+                viewRecentQRCodesBtn.classList.remove('hidden');
+            }
+        });
+    </script>
+</body>
+</html>

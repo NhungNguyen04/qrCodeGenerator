@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .qr-code-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .qr-code-item img {
+            width: 50px;
+            height: 50px;
+            margin-left: 10px;
+        }
+        .created-at {
+            font-size: 0.8em;
+            color: #888;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <p>Your Recent QR Codes</p>
+        <div id="recentQRCodes"></div>
+        <button onclick="window.location.href='/app'">Back to Generator</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                alert('You need to be logged in to view recent QR codes');
+                window.location.href = '/login';
+                return;
+            }
+
+            const response = await fetch(`/qrcodes?token=${token}`);
+            const qrCodes = await response.json();
+
+            const recentQRCodesContainer = document.getElementById('recentQRCodes');
+            recentQRCodesContainer.innerHTML = '';
+
+            qrCodes.forEach(qrCode => {
+                const qrCodeElement = document.createElement('div');
+                qrCodeElement.classList.add('qr-code-item');
+                const createdAt = new Date(qrCode.createdAt).toLocaleDateString('en-GB');
+                qrCodeElement.innerHTML = `
+                    <h5>Text: ${qrCode.text}</h5>
+                    <img src="${qrCode.image}" alt="QR Code">
+                    <span class="created-at">${createdAt}</span></p>
+                `;
+                recentQRCodesContainer.appendChild(qrCodeElement);
+            });
+        });
+    </script>
+</body>
+</html>
