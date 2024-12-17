@@ -8,12 +8,10 @@ const path = require('path');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-const JWT_SECRET = 'your_jwt_secret'; // Replace with your own secret
+const JWT_SECRET = 'your_jwt_secret'; 
 
-// Middleware
 app.use(bodyParser.json());
 
-// Define routes before static middleware
 
 // Registration route
 app.post('/register', async (req, res) => {
@@ -65,7 +63,7 @@ app.post('/login', async (req, res) => {
 app.post('/save-qrcode', async (req, res) => {
     const { token, text, image } = req.body;
 
-    if (!token || !text || !image) {
+    if (!token || !text) {
         return res.status(400).json({ message: 'Please provide all required fields' });
     }
 
@@ -101,46 +99,32 @@ app.get('/qrcodes', async (req, res) => {
     }
 });
 
-// Serve the registration page
+
 app.get('/register', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'register.html'));
 });
-
-// Serve the login page
 app.get('/login', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'login.html'));
 });
-
-// Serve the main app page
 app.get('/app', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
-
-// Serve the recent QR codes page
 app.get('/recent-qr', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'recent-qr.html'));
 });
-
-// Static middleware should be placed after route handlers
 app.use(express.static(path.join(__dirname, 'public')));
-
-// MongoDB connection
 mongoose.connect(process.env.MONGODB_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 })
 .then(() => console.log('Connected to MongoDB'))
 .catch(err => console.error('MongoDB connection error:', err));
-
-// User schema and model
 const userSchema = new mongoose.Schema({
     username: { type: String, required: true, unique: true },
     password: { type: String, required: true },
 });
 
 const User = mongoose.model('User', userSchema);
-
-// QR Code schema and model
 const qrCodeSchema = new mongoose.Schema({
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     text: { type: String, required: true },
@@ -149,8 +133,6 @@ const qrCodeSchema = new mongoose.Schema({
 });
 
 const QRCode = mongoose.model('QRCode', qrCodeSchema);
-
-// Start server
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });

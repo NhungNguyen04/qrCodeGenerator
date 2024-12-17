@@ -35,25 +35,36 @@ async function generateQRCode() {
             let logoSize = size * 0.2;
             let x = (size - logoSize) / 2;
             let y = (size - logoSize) / 2;
-            
-            // Add border radius
+
             ctx.save();
             ctx.beginPath();
             ctx.arc(x + logoSize / 2, y + logoSize / 2, logoSize / 2, 0, Math.PI * 2);
             ctx.clip();
-            
+
             ctx.drawImage(logo, x, y, logoSize, logoSize);
             ctx.restore();
             qrImg.src = canvas.toDataURL('image/png');
+
+            if (localStorage.getItem('token')) {
+                const token = localStorage.getItem('token');
+                const image = canvas.toDataURL('image/png');
+                saveQRCodeToDatabase(token, qrText.value, image);
+            }
+
+            // Show the image and buttons
+            imgBox.classList.add('show-img');
+            clearBtn.classList.remove('hidden');
+            downloadBtn.classList.remove('hidden');
+            document.getElementById('shareOptions').classList.remove('hidden');
         };
 
+        // Handle logo or emoji input
         if (logoInput.files && logoInput.files[0] && emojiInput.value) {
             alert('Please choose only one option: Image or Emoji');
         }
         else if (logoInput.files && logoInput.files[0]) {
             logo.src = URL.createObjectURL(logoInput.files[0]);
         } else if (emojiInput.value) {
-            // Create emoji image
             let emojiCanvas = document.createElement('canvas');
             emojiCanvas.width = 100;
             emojiCanvas.height = 100;
@@ -65,30 +76,24 @@ async function generateQRCode() {
             qrImg.src = canvas.toDataURL('image/png');
         }
 
-        if (localStorage.getItem('token')) {
-            const token = localStorage.getItem('token');
-            const image = canvas.toDataURL('image/png');
-            const response = await fetch('/save-qrcode', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ token, text: qrText.value, image })
-            });
-
-            const data = await response.json();
-            if (response.status !== 201) {
-                alert(data.message);
-            }
-        }
-
-        imgBox.classList.add('show-img');
-        clearBtn.classList.remove('hidden');
-        downloadBtn.classList.remove('hidden');
-        document.getElementById('shareOptions').classList.remove('hidden');
     } else {
         qrText.classList.add('error');
         setTimeout(() => {
             qrText.classList.remove('error');
         }, 1000);
+    }
+}
+
+async function saveQRCodeToDatabase(token, text, image) {
+    const response = await fetch('/save-qrcode', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token, text, image })
+    });
+
+    const data = await response.json();
+    if (response.status !== 201) {
+        alert(data.message);
     }
 }
 
@@ -185,9 +190,3 @@ async function copyToClipboard() {
 }
 
 downloadBtn.addEventListener('click', downloadImg);
-if (shareBtn) {
-    shareBtn.addEventListener('click', showShareOptions);
-} else {
-    console.error('Share button not found');
-}
-
